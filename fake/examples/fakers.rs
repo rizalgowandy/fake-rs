@@ -196,7 +196,7 @@ fn company_faker() {
     let val: String = BuzzwordTail(EN).fake();
     println!("{:?}", val);
 
-    let val: String = CatchPhase(EN).fake();
+    let val: String = CatchPhrase(EN).fake();
     println!("{:?}", val);
 
     let val: String = BsVerb(EN).fake();
@@ -289,6 +289,16 @@ fn phone_number_faker() {
     println!("{:?}", val);
 }
 
+fn finance_faker() {
+    use fake::faker::finance::raw::*;
+
+    let val: String = Bic(EN).fake();
+    println!("{:?}", val);
+
+    let val: String = Isin(EN).fake();
+    println!("{:?}", val);
+}
+
 #[cfg(feature = "http")]
 fn http_faker() {
     use fake::faker::http::raw::*;
@@ -319,6 +329,36 @@ fn http_faker() {
     println!("{:?}", val);
 
     let val: http::Version = Faker.fake();
+    println!("{:?}", val);
+
+    let val: http::Method = Faker.fake();
+    println!("{:?}", val);
+
+    let val: http::HeaderName = Faker.fake();
+    println!("{:?}", val);
+
+    let val: http::HeaderValue = Faker.fake();
+    println!("{:?}", val);
+
+    let val: http::HeaderMap = Faker.fake();
+    println!("{:?}", val);
+
+    let val: http::uri::Scheme = Faker.fake();
+    println!("{:?}", val);
+
+    let val: http::uri::Authority = Faker.fake();
+    println!("{:?}", val);
+
+    let val: http::uri::PathAndQuery = Faker.fake();
+    println!("{:?}", val);
+
+    let val: http::Uri = Faker.fake();
+    println!("{:?}", val);
+
+    let val: http::Request<String> = Faker.fake();
+    println!("{:?}", val);
+
+    let val: http::Response<String> = Faker.fake();
     println!("{:?}", val);
 }
 
@@ -534,6 +574,7 @@ fn main() {
     internet_faker();
     number_faker();
     phone_number_faker();
+    finance_faker();
     currency_faker();
     creditcard_faker();
     barcode_faker();

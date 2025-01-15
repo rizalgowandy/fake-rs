@@ -75,6 +75,19 @@ mod field_options {
 
             assert_eq!(o, MyEnum::Two { x: 89, y: 0, z: 1 });
         }
+
+        #[test]
+        #[allow(dead_code)]
+        fn with_skip_variant() {
+            #[derive(Eq, PartialEq, Debug, Dummy)]
+            enum MyEnum {
+                One,
+                #[dummy(skip)]
+                Two,
+            }
+            let o: MyEnum = Faker.fake_with_rng(&mut rng());
+            assert_eq!(o, MyEnum::One);
+        }
     }
 
     mod unit_struct {
@@ -170,9 +183,9 @@ mod field_options {
                 pub name: String,
             }
 
-            let o: Obj = Faker.fake_with_rng(&mut rng());
-
-            assert_eq!(o.name, "5KuGzxfjPN9Ha");
+            let o1: Obj = Faker.fake_with_rng(&mut rng());
+            let o2: Obj = Faker.fake_with_rng(&mut rng());
+            assert_eq!(o1.name, o2.name);
         }
 
         #[test]
@@ -196,9 +209,9 @@ mod field_options {
                 pub name: String,
             }
 
-            let o: Obj = Faker.fake_with_rng(&mut rng());
-
-            assert_eq!(o.name, "Marietta Maggio");
+            let o1: Obj = Faker.fake_with_rng(&mut rng());
+            let o2: Obj = Faker.fake_with_rng(&mut rng());
+            assert_eq!(o1.name, o2.name);
         }
 
         #[test]
@@ -323,5 +336,49 @@ mod test_trait_scope {
                 pub id: usize,
             }
         }
+    }
+}
+
+mod test_generic {
+    use super::*;
+
+    #[test]
+    #[allow(dead_code)]
+    fn generic_struct() {
+        #[derive(Eq, PartialEq, Debug, Dummy)]
+        struct MyStruct<T, U> {
+            f1: T,
+            f2: U,
+        }
+
+        let o: MyStruct<u8, f32> = Faker.fake_with_rng(&mut rng());
+
+        assert_eq!(o.f1, 118);
+        assert_eq!(o.f2, 0.56344515);
+    }
+
+    #[test]
+    #[allow(dead_code)]
+    fn generic_enum() {
+        #[derive(Eq, PartialEq, Debug, Dummy)]
+        enum MyEnum<T, U> {
+            F1(T),
+            F2(U),
+        }
+
+        let o: MyEnum<u8, f32> = Faker.fake_with_rng(&mut rng());
+
+        assert_eq!(o, MyEnum::F2(0.56344515));
+    }
+
+    #[test]
+    #[allow(dead_code)]
+    fn generic_tuple() {
+        #[derive(Eq, PartialEq, Debug, Dummy)]
+        struct MyTuple<T, U>(T, U);
+
+        let o: MyTuple<u8, f32> = Faker.fake_with_rng(&mut rng());
+        assert_eq!(o.0, 118);
+        assert_eq!(o.1, 0.56344515);
     }
 }

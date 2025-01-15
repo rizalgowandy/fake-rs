@@ -1,7 +1,11 @@
 //! This module contains implementations of `Dummy` trait
 
-#[cfg(feature = "bigdecimal")]
+#[cfg(feature = "base64")]
+pub mod base64;
+#[cfg(feature = "bigdecimal-rs")]
 pub mod bigdecimal;
+#[cfg(feature = "bson_oid")]
+pub mod bson_oid;
 #[cfg(feature = "chrono")]
 pub mod chrono;
 #[cfg(feature = "chrono-tz")]
@@ -12,8 +16,12 @@ pub mod color;
 pub mod decimal;
 #[cfg(feature = "geo-types")]
 pub mod geo;
+#[cfg(feature = "glam")]
+pub mod glam;
 #[cfg(feature = "http")]
 pub mod http;
+#[cfg(feature = "indexmap")]
+pub mod indexmap;
 #[cfg(feature = "semver")]
 pub mod semver;
 #[cfg(feature = "serde_json")]
@@ -21,9 +29,11 @@ pub mod serde_json;
 pub mod std;
 #[cfg(feature = "time")]
 pub mod time;
+#[cfg(feature = "ulid")]
+pub mod ulid;
+#[cfg(feature = "url")]
+pub mod url;
 #[cfg(feature = "uuid")]
 pub mod uuid;
 #[cfg(feature = "zerocopy")]
 pub mod zerocopy_byteorder;
-#[cfg(feature = "glam")]
-pub mod glam;

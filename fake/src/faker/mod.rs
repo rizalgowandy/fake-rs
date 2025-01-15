@@ -22,7 +22,7 @@ macro_rules! def_fakers {
         $(
             #[inline]
             #[allow(non_snake_case)]
-            pub fn $name$(< $($lts),* >)?($($arg:$typ),*) -> raw::$name<$locale_s> {
+            pub fn $name$(< $($lts),* >)?($($arg:$typ),*) -> raw::$name<$($($lts),*,)?$locale_s> {
                 raw::$name($locale_s, $($arg),*)
             }
         )+
@@ -39,10 +39,15 @@ macro_rules! def_fakers {
         def_fakers!(@m fr_fr=>FR_FR {$($name$(< $($lts),* >)?($($arg:$typ),*);)+});
         def_fakers!(@m zh_tw=>ZH_TW {$($name$(< $($lts),* >)?($($arg:$typ),*);)+});
         def_fakers!(@m zh_cn=>ZH_CN {$($name$(< $($lts),* >)?($($arg:$typ),*);)+});
+        def_fakers!(@m ar_sa=>AR_SA {$($name$(< $($lts),* >)?($($arg:$typ),*);)+});
+        def_fakers!(@m ja_jp=>JA_JP {$($name$(< $($lts),* >)?($($arg:$typ),*);)+});
+        def_fakers!(@m pt_br=>PT_BR {$($name$(< $($lts),* >)?($($arg:$typ),*);)+});
+        def_fakers!(@m de_de=>DE_DE {$($name$(< $($lts),* >)?($($arg:$typ),*);)+});
+
     };
 }
 
-mod impls;
+pub mod impls;
 
 pub mod address {
     def_fakers! {
@@ -132,7 +137,7 @@ pub mod company {
         Buzzword();
         BuzzwordMiddle();
         BuzzwordTail();
-        CatchPhase();
+        CatchPhrase();
         BsVerb();
         BsAdj();
         BsNoun();
@@ -235,6 +240,7 @@ pub mod currency {
 pub mod finance {
     def_fakers! {
         Bic();
+        Isin();
     }
 }
 

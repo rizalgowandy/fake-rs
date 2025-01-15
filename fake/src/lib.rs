@@ -2,10 +2,18 @@
 //!
 //! # Feature flags
 //!
-//! - `derive` provides `#[derive(Dummy)]`
-//! - `chrono` [chrono](https://docs.rs/chrono) integration
-//! - `http` [http](https://docs.rs/http) integration
-//! - `uuid` [uuid](https://docs.rs/uuid) integration
+//! - `derive`: Enable `#[derive(Dummy)]` macro
+//! - `bigdecimal`: [bigdecimal](https://docs.rs/bigdecimal) integration
+//! - `bson_oid`: [bson](https://docs.rs/bson) integration
+//! - `chrono`: [chrono](https://docs.rs/chrono) integration
+//! - `chrono-tz`: [chrono-tz](https://docs.rs/chrono-tz) integration
+//! - `geo`: [geo-types](https://docs.rs/geo-types) integration
+//! - `glam`: [glam](https://docs.rs/glam) integration
+//! - `http`: [http](https://docs.rs/http) integration
+//! - `rust-decimal`: [rust_decimal](https://docs.rs/rust_decimal) integration
+//! - `time`: [time](https://docs.rs/time) integration
+//! - `ulid`: [ulid](https://docs.rs/ulid) integration
+//! - `uuid`: [uuid](https://docs.rs/uuid) integration
 //!
 //! # Usage
 //!
@@ -31,7 +39,7 @@
 //! println!("tuple {:?}", tuple);
 //! println!("String {:?}", Faker.fake::<String>());
 //!
-//! // types U can used to generate fake value T, if `T: Dummy<U>`
+//! // types U can `be used to generate fake value T, if `T: Dummy<U>`
 //! println!("String {:?}", (8..20).fake::<String>());
 //! println!("u32 {:?}", (8..20).fake::<u32>());
 //!
@@ -71,14 +79,23 @@
 //!     println!("value from fixed seed {}", v);
 //! }
 //!
+//! # #[cfg(feature = "always-true-rng")] {
 //! // Use an always true RNG so that optional types are always `Some` values. (Requires
 //! // always-true-rng feature).
 //! use fake::utils::AlwaysTrueRng;
 //! let mut rng = AlwaysTrueRng::default();
 //! let result: Option<i64> = Faker.fake_with_rng(&mut rng);
 //! println!("Always Some: {}", result.unwrap());
+//! # }
 //! ```
-use rand::Rng;
+
+// Enable `doc_cfg` feature for `docs.rs`
+#![cfg_attr(docsrs, feature(doc_cfg))]
+
+#[doc(hidden)]
+pub use rand;
+#[doc(hidden)]
+pub use rand::Rng;
 
 /// Generate default fake value for given type using [`Fake`].
 ///
@@ -133,7 +150,7 @@ pub struct Faker;
 ///
 /// # Derivable
 ///
-/// The trait can be used with `#[derive]` if all of the type's fields
+/// The trait can be used with `#[derive]` if all the type's fields
 /// implement [`Fake`]. See [`Dummy`][macro@Dummy] for more.
 pub trait Dummy<T>: Sized {
     /// Generate a dummy value for a type.
@@ -212,6 +229,7 @@ pub trait Fake: Sized {
 impl<T> Fake for T {}
 
 #[cfg(feature = "geo")]
+#[cfg_attr(docsrs, doc(cfg(feature = "geo")))]
 fn unique<U: Dummy<Faker> + PartialEq, R: Rng + ?Sized>(rng: &mut R, len: usize) -> Vec<U> {
     let mut set = Vec::<U>::new();
     unique_append(&mut set, rng, len);
@@ -219,6 +237,7 @@ fn unique<U: Dummy<Faker> + PartialEq, R: Rng + ?Sized>(rng: &mut R, len: usize)
 }
 
 #[cfg(feature = "geo")]
+#[cfg_attr(docsrs, doc(cfg(feature = "geo")))]
 fn unique_append<U: Dummy<Faker> + PartialEq, R: Rng + ?Sized>(
     set: &mut Vec<U>,
     rng: &mut R,
@@ -246,19 +265,47 @@ pub use impls::std::result::ResultFaker;
 pub use impls::std::string::StringFaker;
 
 #[cfg(feature = "geo")]
+#[cfg_attr(docsrs, doc(cfg(feature = "geo")))]
 pub use impls::geo;
 
+#[cfg(feature = "ulid")]
+#[cfg_attr(docsrs, doc(cfg(feature = "ulid")))]
+pub use impls::ulid;
+
 #[cfg(feature = "uuid")]
+#[cfg_attr(docsrs, doc(cfg(feature = "uuid")))]
 pub use impls::uuid;
 
 #[cfg(feature = "rust_decimal")]
+#[cfg_attr(docsrs, doc(cfg(feature = "rust_decimal")))]
 pub use impls::decimal;
 
-#[cfg(feature = "bigdecimal")]
+#[cfg(any(feature = "bigdecimal", feature = "bigdecimal-rs"))]
+#[cfg_attr(
+    docsrs,
+    doc(cfg(any(feature = "bigdecimal", feature = "bigdecimal-rs")))
+)]
 pub use impls::bigdecimal;
 
 #[cfg(feature = "serde_json")]
+#[cfg_attr(docsrs, doc(cfg(feature = "serde_json")))]
 pub use impls::serde_json;
+
+#[cfg(feature = "time")]
+#[cfg_attr(docsrs, doc(cfg(feature = "time")))]
+pub use impls::time;
+
+#[cfg(feature = "chrono")]
+#[cfg_attr(docsrs, doc(cfg(feature = "chrono")))]
+pub use impls::chrono;
+
+#[cfg(feature = "bson_oid")]
+#[cfg_attr(docsrs, doc(cfg(feature = "bson_oid")))]
+pub use impls::bson_oid;
+
+#[cfg(feature = "base64")]
+#[cfg_attr(docsrs, doc(cfg(feature = "base64")))]
+pub use impls::base64;
 
 /// Fake value generation for specific formats.
 ///
@@ -286,7 +333,7 @@ pub mod locales;
 
 /// Derive macro generating an impl of the trait [`Dummy`]. This works for both structs and enums.
 ///
-/// # Attributes 
+/// # Attributes
 ///
 /// For any fields in the type there are a number of keys that can be used to control the code generation.
 /// All of these go within the dummy attribute.
@@ -410,6 +457,7 @@ pub mod locales;
 /// let b: Bar = Faker.fake();
 /// ```
 #[cfg(feature = "derive")]
+#[cfg_attr(docsrs, doc(cfg(feature = "derive")))]
 pub use dummy::Dummy;
 
 pub mod utils;
